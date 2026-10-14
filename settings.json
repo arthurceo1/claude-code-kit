@@ -1,0 +1,76 @@
+{
+  "outputStyle": "Compact",
+  "autoCompactWindow": 600000,
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
+    "BASH_MAX_OUTPUT_LENGTH": "8000",
+    "MAX_MCP_OUTPUT_TOKENS": "10000"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "sh \"$HOME/.claude/statusline.sh\"",
+    "padding": 0
+  },
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf ~/*)",
+      "Bash(rm -rf /Users)",
+      "Bash(rm -rf /Users/*)",
+      "Bash(sudo rm*)",
+      "Bash(diskutil *)",
+      "Bash(mkfs*)",
+      "Bash(dd *)",
+      "Bash(git stash)",
+      "Bash(git stash pop*)",
+      "Bash(git stash drop*)",
+      "Bash(git stash apply*)",
+      "Bash(git stash clear*)",
+      "Bash(git stash push*)",
+      "Bash(git stash save*)",
+      "Bash(git stash store*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Edit(~/Desktop/**)",
+      "Write(~/Desktop/**)",
+      "Edit(~/Documents/**)",
+      "Write(~/Documents/**)",
+      "Edit(~/Pictures/**)",
+      "Write(~/Pictures/**)",
+      "Edit(~/Movies/**)",
+      "Write(~/Movies/**)",
+      "Edit(~/Music/**)",
+      "Write(~/Music/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/git_guard.py",
+            "timeout": 420,
+            "statusMessage": "Garde-fous git (stash/reset/clean/force + typecheck avant push)"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/context_guard.py",
+            "timeout": 10,
+            "statusMessage": "Garde-fou de contexte"
+          }
+        ]
+      }
+    ]
+  }
+}
